@@ -34,6 +34,16 @@ void sharedIncrementII(int &value, std::mutex& mtx)
     }
 }
 
+void sharedIncrementIII(int &value, std::mutex& mtx)
+{
+    for (int i = 0; i < 1000; i++)
+    {
+        std::lock_guard<std::mutex> guard(mtx);
+        value++;
+
+    }
+}
+
 void usingMutex()
 {
     int count = 0;
@@ -41,7 +51,7 @@ void usingMutex()
 
     std::thread t1(sharedIncrementII, std::ref(count), std::ref(mtx));
 
-    std::thread t2(sharedIncrementII, std::ref(count), std::ref(mtx));
+    std::thread t2(sharedIncrementIII, std::ref(count), std::ref(mtx));
 
     t1.join();
     t2.join();
