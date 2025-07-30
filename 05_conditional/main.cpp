@@ -2,7 +2,7 @@
 #include <iostream>
 #include <condition_variable>
 
-volatile bool ready = false; // Flag to signal worker to start
+volatile bool ready = false;     // Flag to signal worker to start
 volatile bool processed = false; // Flag to signal main that work is done
 std::mutex mtx;
 std::condition_variable cv;
@@ -45,7 +45,8 @@ void mainThread()
     // Wait for worker to signal 'processed'
     {
         std::unique_lock<std::mutex> lk(mtx);
-        cv.wait(lk, [&]() { return processed; }); // Wait until processed is true
+        cv.wait(lk, [&]()
+                { return processed; }); // Wait until processed is true
     }
 
     std::cout << "Back in main" << '\n';
@@ -56,8 +57,8 @@ int main()
     try
     {
         std::thread t1(workerThread); // Start worker thread
-        mainThread(); // Run main thread logic
-        t1.join(); // Wait for worker to finish
+        mainThread();                 // Run main thread logic
+        t1.join();                    // Wait for worker to finish
     }
     catch (const std::system_error &e)
     {
