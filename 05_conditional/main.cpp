@@ -14,8 +14,9 @@ void workerThread()
 
     // Wait for main to signal 'ready'
     {
+        // for CV, simpler lock_guard<> can not be used
         std::unique_lock<std::mutex> lk(mtx);
-        cv.wait(lk, [&]
+        cv.wait(lk, []
                 { return ready; }); // Wait until ready is true
     }
 
@@ -45,7 +46,7 @@ void mainThread()
     // Wait for worker to signal 'processed'
     {
         std::unique_lock<std::mutex> lk(mtx);
-        cv.wait(lk, [&]()
+        cv.wait(lk, []()
                 { return processed; }); // Wait until processed is true
     }
 
